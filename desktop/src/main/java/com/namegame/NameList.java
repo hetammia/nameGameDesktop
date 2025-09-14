@@ -4,12 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class NameList {
-    Name [] names;
+    ArrayList<Name> names = new ArrayList<>();
     private String username;
     private char genderPreference;
     private boolean ignoreRare;
@@ -36,11 +37,11 @@ public class NameList {
         }
 
         if (ignoreRare == 0) {
-            this.ignoreRare = false;
-            System.out.println("Using all names");
-        } else {
             this.ignoreRare = true;
             System.out.println("Ignoring rare names");
+        } else {
+            this.ignoreRare = false;
+            System.out.println("Using all names");
         }
 
         try {
@@ -63,6 +64,7 @@ public class NameList {
         
         Iterator<Map.Entry<String, JsonNode>> allNames = jsonNode.fields();
 
+
         while (allNames.hasNext()) {
             Map.Entry<String, JsonNode> nameEntry = allNames.next();
             int id = Integer.valueOf(nameEntry.getKey());
@@ -73,30 +75,33 @@ public class NameList {
             double females = attributes.get("count_f").asDouble();
             double first = attributes.get("first_ratio").asDouble();
             double gender = attributes.get("g_ratio").asDouble();
-            System.out.println(name);
+            //System.out.println(name);
 
+            Name newName;
             
-            if (genderPreference == 'b' && !ignoreRare) {
-                Name newName = new Name(id, name, males, females, gender, first, false);
-                // add to the array
+            if (this.genderPreference == 'b' && (!this.ignoreRare)) {
+                System.out.println("Include all");
+                newName = new Name(id, name, males, females, gender, first, false);
             }
-
             // gender preference
-            if ((genderPreference == 'm' && gender < 0.25) || (genderPreference == 'f' && gender > 0.75)) {
-                Name newName = new Name(id, name, males, females, gender, first, true);
+            else if ((this.genderPreference == 'm' && gender < 0.25) || (this.genderPreference == 'f' && gender > 0.75)) {
+                System.out.println("Not matching gender");
+                newName = new Name(id, name, males, females, gender, first, true);
                 // add to the array
-            } else if (ignoreRare && (males + females < 11)) {
-                Name newName = new Name(id, name, males, females, gender, first, true);
+            } else if (this.ignoreRare && (males + females < 11)) {
+                System.out.println("Not matching rarity");
+                newName = new Name(id, name, males, females, gender, first, true);
             } else {
-                Name newName = new Name(id, name, males, females, gender, first, false);
+                newName = new Name(id, name, males, females, gender, first, false);
             }
-            
 
+            names.add(newName);
+            
         }
+    }
+
+    private void writeNameList(){
+        ObjectMapper mapper = new ObjectMapper();
         
-        /*
-        String name = jsonNode.get("name").asText();
-        int age = jsonNode.get("age").asInt();
-        String city = jsonNode.get("city").asText();*/
     }
 }
