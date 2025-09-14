@@ -6,8 +6,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * For creating the a name list json for a new user.
+ * Applies the user's preferences to the master names.json.
+ */
 
 public class NameList {
     ArrayList<Name> names = new ArrayList<>();
@@ -47,6 +53,12 @@ public class NameList {
         try {
             readJSONList();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            writeNameList();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -100,8 +112,15 @@ public class NameList {
         }
     }
 
-    private void writeNameList(){
+    private void writeNameList() throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
+
+        File filu = new File(username + "_namelist.json");
+        try {
+            mapper.writeValue(filu, names);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         
     }
 }
