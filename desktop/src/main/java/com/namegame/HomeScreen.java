@@ -5,12 +5,14 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.awt.GridBagConstraints;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.PopupFactory;
 
 import java.awt.Font;
 
@@ -26,7 +28,7 @@ public class HomeScreen extends JPanel {
 
     JPanel panel = new JPanel();
     JLabel title = new JLabel();
-    JButton startButton = new JButton("Start");
+    JButton startButton = new JButton("Start from beginning");
     JButton continueButton = new JButton("Continue"); 
 
     int [] nameQueue;
@@ -37,6 +39,7 @@ public class HomeScreen extends JPanel {
         
         setUpTitle();
 
+        // START BUTTON
         this.startButton.addActionListener(new ActionListener() {
             
             public void actionPerformed(ActionEvent e) {
@@ -62,6 +65,36 @@ public class HomeScreen extends JPanel {
                 
 
                 NameList nameList = new NameList(name, genderChoice, rarityChoice);
+
+                for (Name i : nameList.names) {
+                    System.out.println(i.name);
+                }
+            }
+        });
+
+        // CONTINUE BUTTON
+
+        this.continueButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+                try {
+                    NameList nameList = new NameList("namelist.json");
+
+                    String msg = ("Continue as " + nameList.getUsername() + "?");
+                    String [] optionsBinary = {"Yes", "No"};
+                    int continueChoice = JOptionPane.showOptionDialog(panel, 
+                                msg, "Continue?", 
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null, optionsBinary, optionsBinary[0]);
+
+                    if (continueChoice == 0) {
+                        System.out.println("Continuing");
+                    }
+                } catch (IOException notFoundE) {
+                    System.out.println("No name list initialised");
+                    JOptionPane.showMessageDialog(panel, "Progress not found.");
+                }   
             }
         });
 
@@ -97,7 +130,4 @@ public class HomeScreen extends JPanel {
         return;
     }
     
-    private void setUpNewUser() {
-
-    }
 }

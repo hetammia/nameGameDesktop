@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,6 +21,7 @@ public class NameList {
     private String username;
     private char genderPreference;
     private boolean ignoreRare;
+    private int current;
 
     /**
      * Constructor for a name list/queue. Requires the 
@@ -57,17 +59,57 @@ public class NameList {
         }
 
         try {
-            writeNameList();
+            initialiseNameList();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // create personal name queue;
-        // loop through the entire name list
-        // for every name, check that it matches the choices
-        // if yes, add the name to the queue
+    }
+    /**
+     * Use this constructor to fetch an existing name list
+     * @param fileName
+     * @throws IOException 
+     */
+    public NameList(String fileName) throws IOException{
+        // open the file
 
-        // read the json to create the name list
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(new File(fileName));
+
+        Iterator<Map.Entry<String, JsonNode>> userInfo = jsonNode.fields();
+        while (userInfo.hasNext()) {
+            Map.Entry<String, JsonNode> infoEntry = userInfo.next();
+            JsonNode entryData = infoEntry.getValue();
+            
+            if (infoEntry.getKey().equals("current")) {
+                System.out.println(infoEntry.getValue());
+                current = entryData.asInt();
+            } else if (infoEntry.getKey().equals("names")) {
+
+                Iterator<Map.Entry<String, JsonNode>> allNames = entryData.fields();
+
+                while (allNames.hasNext()) {
+                    Map.Entry<String, JsonNode> nameEntry = allNames.next();
+                    int id = Integer.valueOf(nameEntry.getKey());
+                    JsonNode attributes = nameEntry.getValue();
+
+                    String name = attributes.get("name").asText();
+                    double males = attributes.get("count_m").asDouble();
+                    double females = attributes.get("count_f").asDouble();
+                    double first = attributes.get("first_ratio").asDouble();
+                    double gender = attributes.get("g_ratio").asDouble();
+
+                    names.add(new Name(id, name, males, females, gender, first, false));
+
+                }
+            } else if (infoEntry.getKey().equals("username")) {
+                username = entryData.asText();
+            }
+        }
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     private void readJSONList() throws IOException{
@@ -75,7 +117,6 @@ public class NameList {
         JsonNode jsonNode = objectMapper.readTree(new File("desktop\\src\\main\\java\\com\\namegame\\names.json"));
         
         Iterator<Map.Entry<String, JsonNode>> allNames = jsonNode.fields();
-
 
         while (allNames.hasNext()) {
             Map.Entry<String, JsonNode> nameEntry = allNames.next();
@@ -87,7 +128,6 @@ public class NameList {
             double females = attributes.get("count_f").asDouble();
             double first = attributes.get("first_ratio").asDouble();
             double gender = attributes.get("g_ratio").asDouble();
-            //System.out.println(name);
 
             Name newName;
             
@@ -112,12 +152,17 @@ public class NameList {
         }
     }
 
-    private void writeNameList() throws JsonProcessingException{
+    private void initialiseNameList() throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
 
-        File filu = new File(username + "_namelist.json");
+        Map<String, Object> jsonMap = new java.util.HashMap<>();
+        jsonMap.put("username", username);
+        jsonMap.put("current", 0);
+        jsonMap.put("names", names);
+
+        File filu = new File("namelist.json");
         try {
-            mapper.writeValue(filu, names);
+            mapper.writeValue(filu, jsonMap);
         } catch (IOException e) {
             e.printStackTrace();
         }
