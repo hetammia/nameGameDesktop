@@ -1,6 +1,8 @@
 package com.namegame;
 
 import javax.swing.*;
+
+import java.awt.CardLayout;
 import java.awt.Font;
 
 public class NameGUI {
@@ -27,11 +29,13 @@ public class NameGUI {
         
         frame.add(buttonPanel);
         */
+        JPanel basePanel = new JPanel(new CardLayout());
 
-        HomeScreen home = new HomeScreen();
+        basePanel.add(new HomeScreen(), "home");
+        //HomeScreen home = new HomeScreen();
         
         frame.setSize(600,480);
-        frame.add(home);
+        frame.add(basePanel);
         
         //frame.setLayout(null);
         

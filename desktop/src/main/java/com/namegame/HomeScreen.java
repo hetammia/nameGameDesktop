@@ -4,15 +4,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.awt.GridBagConstraints;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.PopupFactory;
 
 import java.awt.Font;
 
@@ -30,8 +27,6 @@ public class HomeScreen extends JPanel {
     JLabel title = new JLabel();
     JButton startButton = new JButton("Start from beginning");
     JButton continueButton = new JButton("Continue"); 
-
-    int [] nameQueue;
 
     public HomeScreen () {
 

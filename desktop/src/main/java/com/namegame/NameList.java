@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -110,6 +109,12 @@ public class NameList {
 
     public String getUsername() {
         return username;
+    }
+    public int getCurrent() {
+        return current;
+    }
+    public void setCurrent(int current) {
+        this.current = current;
     }
 
     private void readJSONList() throws IOException{
