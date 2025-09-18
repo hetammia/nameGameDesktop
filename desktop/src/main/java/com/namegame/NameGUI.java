@@ -33,7 +33,7 @@ public class NameGUI {
         HomeScreen home = new HomeScreen();
 
         basePanel.add(home, "home");
-        basePanel.add(new NameScreen(home.nameList), "nameScreen");
+        //basePanel.add(new NameScreen(home.nameList), "nameScreen");
         
         frame.setSize(600,480);
         frame.add(basePanel);

@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 
 public class NameScreen extends JPanel{
 
+    NameList nameList;
     JPanel panel = new JPanel();
 
     // for containing the header, name, & info
@@ -30,7 +31,10 @@ public class NameScreen extends JPanel{
     JButton likeButton = new JButton("like");
     JButton saveButton = new JButton("save");
 
-    public NameScreen(NameList namelist) {
+    public NameScreen(NameList nameList) {
+        this.nameList = nameList;
+        System.out.println(nameList);
+
         this.setLayout(new GridBagLayout());
         
         this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));
@@ -74,7 +78,7 @@ public class NameScreen extends JPanel{
         int boyBlue = 227;
 
 
-        int redChange = (int)((boyRed-girlRed) * genderRatio); //tästä tulee -59; 227+-59 (168)
+        int redChange = (int)((boyRed-girlRed) * genderRatio);
         int greenChange = (int)((boyGreen-girlGreen) * genderRatio);
         int blueChange = (int)((boyBlue-girlBlue) * genderRatio);
 
@@ -88,7 +92,7 @@ public class NameScreen extends JPanel{
         JLabel headerText = new JLabel("What do you think of ");
         this.headerPanel.add(headerText);
 
-        this.name = new JLabel("[Name]");
+        this.name = new JLabel(nameList.getNextName().name);
         this.namePanel.add(name);
 
         this.infoData = new JLabel("[Info]");

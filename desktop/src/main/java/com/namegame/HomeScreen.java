@@ -86,8 +86,14 @@ public class HomeScreen extends JPanel {
 
                     if (continueChoice == 0) {
                         System.out.println("Continuing");
-                        CardLayout cl = (CardLayout) panel.getParent().getLayout();
-                        cl.show(panel.getParent(), "nameScreen");
+                        JPanel basePanel = (JPanel) panel.getParent();
+                        CardLayout cl = (CardLayout) basePanel.getLayout();
+                        System.out.println("Length " + nameList.names.size());
+                        NameScreen nameScreen = new NameScreen(nameList);
+                        basePanel.add(nameScreen, "nameScreen");
+                        cl.show(basePanel, "nameScreen");
+                        
+
                     }
                 } catch (IOException notFoundE) {
                     System.out.println("No name list initialised");

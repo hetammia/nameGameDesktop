@@ -7,6 +7,7 @@ public class Name {
     //private double maleFirst;
     //private double maleOther;
     private double femaleCount;
+    private double allCount;
     //private double femaleFirst;
     //private double femaleOther;
     private double genderRatio;
@@ -28,6 +29,14 @@ public class Name {
         this.genderRatio = gRatio;
         this.firstNameRatio = firstRatio;
         this.filterOut = filterOut;
+    }
+
+    public Name(int id, String name, double allCount, double firstRatio, double genderRatio) {
+        this.id = id;
+        this.name = name;
+        this.allCount = allCount;
+        this.firstNameRatio = firstRatio;
+        this.genderRatio = genderRatio;
     }
 
     public double getAllCount() {

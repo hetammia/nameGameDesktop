@@ -78,26 +78,21 @@ public class NameList {
         while (userInfo.hasNext()) {
             Map.Entry<String, JsonNode> infoEntry = userInfo.next();
             JsonNode entryData = infoEntry.getValue();
+
+            
             
             if (infoEntry.getKey().equals("current")) {
-                System.out.println(infoEntry.getValue());
                 current = entryData.asInt();
             } else if (infoEntry.getKey().equals("names")) {
 
-                Iterator<Map.Entry<String, JsonNode>> allNames = entryData.fields();
+                for (JsonNode attributes : entryData){
 
-                while (allNames.hasNext()) {
-                    Map.Entry<String, JsonNode> nameEntry = allNames.next();
-                    int id = Integer.valueOf(nameEntry.getKey());
-                    JsonNode attributes = nameEntry.getValue();
-
+                    int id = attributes.get("id").asInt();
                     String name = attributes.get("name").asText();
-                    double males = attributes.get("count_m").asDouble();
-                    double females = attributes.get("count_f").asDouble();
-                    double first = attributes.get("first_ratio").asDouble();
-                    double gender = attributes.get("g_ratio").asDouble();
-
-                    names.add(new Name(id, name, males, females, gender, first, false));
+                    double count = attributes.get("allCount").asDouble();
+                    double firstRatio = attributes.get("firstNameRatio").asDouble();
+                    double genderRatio = attributes.get("genderRatio").asDouble();
+                    names.add(new Name(id, name, count, firstRatio, genderRatio));
 
                 }
             } else if (infoEntry.getKey().equals("username")) {
@@ -114,6 +109,17 @@ public class NameList {
     }
     public void setCurrent(int current) {
         this.current = current;
+    }
+
+    /**
+     * Retrieves the next name from the list,
+     * moves the 'current' to the next index.
+     * @param current
+     * @return name
+     */
+    public Name getNextName(){
+        setCurrent(current+1);
+        return names.get(current);
     }
 
     /**
@@ -141,7 +147,6 @@ public class NameList {
             Name newName;
             
             if (this.genderPreference == 'b' && (!this.ignoreRare)) {
-                System.out.println("Include all");
                 newName = new Name(id, name, males, females, gender, first, false);
             }
             // gender preference
@@ -172,7 +177,7 @@ public class NameList {
 
         Map<String, Object> jsonMap = new java.util.HashMap<>();
         jsonMap.put("username", username);
-        jsonMap.put("current", 0);
+        jsonMap.put("current", -1);
         jsonMap.put("names", names);
 
         File filu = new File("namelist.json");
