@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import java.awt.CardLayout;
 import java.awt.Font;
 
 /**
@@ -27,6 +28,8 @@ public class HomeScreen extends JPanel {
     JLabel title = new JLabel();
     JButton startButton = new JButton("Start from beginning");
     JButton continueButton = new JButton("Continue"); 
+
+    NameList nameList;
 
     public HomeScreen () {
 
@@ -59,13 +62,11 @@ public class HomeScreen extends JPanel {
                 
                 
 
-                NameList nameList = new NameList(name, genderChoice, rarityChoice);
-
-                for (Name i : nameList.names) {
-                    System.out.println(i.name);
-                }
+                nameList = new NameList(name, genderChoice, rarityChoice);
+                
             }
         });
+        
 
         // CONTINUE BUTTON
 
@@ -73,7 +74,7 @@ public class HomeScreen extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 
                 try {
-                    NameList nameList = new NameList("namelist.json");
+                    nameList = new NameList("namelist.json");
 
                     String msg = ("Continue as " + nameList.getUsername() + "?");
                     String [] optionsBinary = {"Yes", "No"};
@@ -85,6 +86,8 @@ public class HomeScreen extends JPanel {
 
                     if (continueChoice == 0) {
                         System.out.println("Continuing");
+                        CardLayout cl = (CardLayout) panel.getParent().getLayout();
+                        cl.show(panel.getParent(), "nameScreen");
                     }
                 } catch (IOException notFoundE) {
                     System.out.println("No name list initialised");
@@ -115,6 +118,7 @@ public class HomeScreen extends JPanel {
         c.gridy = 2;
         c.anchor = GridBagConstraints.CENTER;
         this.add(continueButton, c);
+
     }
 
     private void setUpTitle() {

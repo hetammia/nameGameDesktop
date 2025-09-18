@@ -70,7 +70,6 @@ public class NameList {
      * @throws IOException 
      */
     public NameList(String fileName) throws IOException{
-        // open the file
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(new File(fileName));
@@ -117,6 +116,11 @@ public class NameList {
         this.current = current;
     }
 
+    /**
+     * This reads the names from the original names.json and adds them to the
+     * name array, should they match the user's preferences.
+     * @throws IOException
+     */
     private void readJSONList() throws IOException{
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(new File("desktop\\src\\main\\java\\com\\namegame\\names.json"));
@@ -157,6 +161,12 @@ public class NameList {
         }
     }
 
+    /**
+     * This is for initialising the name list ONLY for a new user,
+     * based on the user's preferences. It writes the list + userdata
+     * to a JSON file.
+     * @throws JsonProcessingException
+     */
     private void initialiseNameList() throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
 
