@@ -1,13 +1,19 @@
 package com.namegame;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Desktop.Action;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 public class NameScreen extends JPanel{
@@ -33,7 +39,6 @@ public class NameScreen extends JPanel{
 
     public NameScreen(NameList nameList) {
         this.nameList = nameList;
-        System.out.println(nameList);
 
         this.setLayout(new GridBagLayout());
         
@@ -55,16 +60,62 @@ public class NameScreen extends JPanel{
     private void setUpButtonPanel() {
         this.buttonPanel.add(this.backButton);
         this.buttonPanel.add(this.dislikeButton);
+        setDislikeAction();
         this.buttonPanel.add(this.likeButton);
+        setLikedAction();
         this.buttonPanel.add(this.saveButton);
+        setSaveAction();
 
         this.buttonPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
         this.panel.add(buttonPanel);
     }
 
+    private void setDislikeAction () {
+        this.dislikeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                switchNextName(nameList.getCurrent());
+            }
+        });
+    }
+
+    private void setLikedAction() {
+        this.likeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                nameList.switchLiked(nameList.getCurrent());
+                switchNextName(nameList.getCurrent());
+            }
+        });
+    }
+
+    private void setSaveAction() {
+        this.saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                nameList.getLikedNames();
+                // update the JSON TODO!!
+                // pop up with continue or show list
+                String [] options = {"Continue", "View Liked Names"};
+                int saveChoice = JOptionPane.showOptionDialog(contentPanel,
+                            "Saved! Do you want to keep swiping?",
+                            "Saving progress...",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null, options, options[0]);
+                
+                if (saveChoice == 0) {
+                    // continue swiping
+                } else {
+                    // switch to the list view
+                }
+            }
+        });
+    }
+
     public void switchNextName(int current) {
-        
+        Name newName = nameList.getNextName();
+        this.name.setText(newName.name);
+        this.infoData.setText(formInfoString(newName));
+        this.setUpBackground(newName.getGenderRatio());
     }
 
     private void setUpBackground(double genderRatio){
@@ -92,10 +143,12 @@ public class NameScreen extends JPanel{
         JLabel headerText = new JLabel("What do you think of ");
         this.headerPanel.add(headerText);
 
-        this.name = new JLabel(nameList.getNextName().name);
+        this.name = new JLabel("[Name]");
+        name.setFont(new Font("Times New Roman", Font.PLAIN, 36));
         this.namePanel.add(name);
 
         this.infoData = new JLabel("[Info]");
+        infoData.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         this.infoPanel.add(infoData);
 
         this.contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.PAGE_AXIS));
@@ -104,7 +157,31 @@ public class NameScreen extends JPanel{
         this.contentPanel.add(namePanel);
         this.contentPanel.add(infoPanel);
 
-        this.contentPanel.setBorder(new EmptyBorder(50, 50, 20, 50));
+        this.contentPanel.setBorder(new EmptyBorder(50, 0, 20, 0));
         this.panel.add(contentPanel);
+    }
+
+    private String formInfoString(Name name) {
+
+        String gender;
+        String firstRatio;
+
+        if (name.getGenderRatio() < 0.25) {
+            gender = "Most people with this name are <b>women</b>. <br>";
+        } else if (name.getGenderRatio() > 0.75) {
+            gender = "Most people with this name are <b>men</b>. <br>";
+        } else {
+            gender = "This name is quite <b>unisex</b>. <br>";
+        }
+
+        if (name.getFirstNameRatio() < 0.33) {
+            firstRatio = "It is commonly a <b>middle name</b>.";
+        } else if (name.getFirstNameRatio() > 0.66){
+            firstRatio = "It is commonly a <b>first name</b>.";
+        } else {
+            firstRatio = "It is used as <b>both first and middle name</b>.";
+        }
+        
+        return "<html><div style='text-align:center'>" + gender + firstRatio + "</div></html>";
     }
 }

@@ -2,6 +2,7 @@ package com.namegame;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.ArrayList;
@@ -80,7 +81,6 @@ public class NameList {
             JsonNode entryData = infoEntry.getValue();
 
             
-            
             if (infoEntry.getKey().equals("current")) {
                 current = entryData.asInt();
             } else if (infoEntry.getKey().equals("names")) {
@@ -92,7 +92,9 @@ public class NameList {
                     double count = attributes.get("allCount").asDouble();
                     double firstRatio = attributes.get("firstNameRatio").asDouble();
                     double genderRatio = attributes.get("genderRatio").asDouble();
-                    names.add(new Name(id, name, count, firstRatio, genderRatio));
+                    boolean liked = attributes.get("liked").asBoolean();
+
+                    names.add(new Name(id, name, count, firstRatio, genderRatio, liked));
 
                 }
             } else if (infoEntry.getKey().equals("username")) {
@@ -111,6 +113,24 @@ public class NameList {
         this.current = current;
     }
 
+    public void switchLiked(int current) {
+        Name likedName = this.names.get(current);
+        likedName.setLiked(true);
+        this.names.set(current, likedName);;
+    }
+
+    public ArrayList<Name> getLikedNames() {
+
+        ArrayList<Name> likedNames = new ArrayList<>();
+        
+        for (Name name : names) {
+            if (name.getLiked()) {
+                likedNames.add(name);
+            }
+        }
+        return likedNames;
+    }
+
     /**
      * Retrieves the next name from the list,
      * moves the 'current' to the next index.
@@ -118,6 +138,8 @@ public class NameList {
      * @return name
      */
     public Name getNextName(){
+        // TODO: add "if not filtered out" looppi
+
         setCurrent(current+1);
         return names.get(current);
     }
@@ -147,18 +169,18 @@ public class NameList {
             Name newName;
             
             if (this.genderPreference == 'b' && (!this.ignoreRare)) {
-                newName = new Name(id, name, males, females, gender, first, false);
+                newName = new Name(id, name, males, females, gender, first, false, false);
             }
             // gender preference
             else if ((this.genderPreference == 'm' && gender < 0.25) || (this.genderPreference == 'f' && gender > 0.75)) {
                 System.out.println("Not matching gender");
-                newName = new Name(id, name, males, females, gender, first, true);
+                newName = new Name(id, name, males, females, gender, first, true, false);
                 // add to the array
             } else if (this.ignoreRare && (males + females < 11)) {
                 System.out.println("Not matching rarity");
-                newName = new Name(id, name, males, females, gender, first, true);
+                newName = new Name(id, name, males, females, gender, first, true, false);
             } else {
-                newName = new Name(id, name, males, females, gender, first, false);
+                newName = new Name(id, name, males, females, gender, first, false, false);
             }
 
             names.add(newName);
