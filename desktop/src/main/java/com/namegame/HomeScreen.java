@@ -42,6 +42,7 @@ public class HomeScreen extends JPanel {
         // START BUTTON
         this.startButton.addActionListener(new ActionListener() {
             
+            // TODO: ADD POSSIBILITY TO CANCEL
             public void actionPerformed(ActionEvent e) {
                 String name = JOptionPane.showInputDialog(panel,
                         "Welcome! What is your name?", null);
@@ -62,8 +63,6 @@ public class HomeScreen extends JPanel {
                             JOptionPane.QUESTION_MESSAGE,
                             null, optionsBinary, optionsBinary[1]);
                 
-                
-
                 nameList = new NameList(name, genderChoice, rarityChoice);
                 
             }

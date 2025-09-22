@@ -59,6 +59,7 @@ public class NameScreen extends JPanel{
     }
 
     private void setUpButtonPanel() {
+        // TODO: add functionality to back button
         this.buttonPanel.add(this.backButton);
         this.buttonPanel.add(this.dislikeButton);
         setDislikeAction();
