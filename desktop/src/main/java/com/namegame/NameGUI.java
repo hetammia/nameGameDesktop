@@ -30,7 +30,7 @@ public class NameGUI {
         */
         JPanel basePanel = new JPanel(new CardLayout());
 
-        HomeScreen home = new HomeScreen();
+        HomeScreen home = new HomeScreen(basePanel);
 
         basePanel.add(home, "home");
         //basePanel.add(new NameScreen(home.nameList), "nameScreen");

@@ -33,13 +33,14 @@ public class Name {
         this.liked = liked;
     }
 
-    public Name(int id, String name, double allCount, double firstRatio, double genderRatio, boolean liked) {
+    public Name(int id, String name, double allCount, double firstRatio, double genderRatio, boolean liked, boolean filtered) {
         this.id = id;
         this.name = name;
         this.allCount = allCount;
         this.firstNameRatio = firstRatio;
         this.genderRatio = genderRatio;
         this.liked = liked;
+        this.filterOut = filtered;
     }
 
     public double getAllCount() {

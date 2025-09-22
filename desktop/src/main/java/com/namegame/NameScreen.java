@@ -1,10 +1,10 @@
 package com.namegame;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Desktop.Action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,13 +13,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 public class NameScreen extends JPanel{
 
     NameList nameList;
     JPanel panel = new JPanel();
+    JPanel basePanel = new JPanel();
 
     // for containing the header, name, & info
     JPanel contentPanel = new JPanel();
@@ -37,8 +37,9 @@ public class NameScreen extends JPanel{
     JButton likeButton = new JButton("like");
     JButton saveButton = new JButton("save");
 
-    public NameScreen(NameList nameList) {
+    public NameScreen(NameList nameList, JPanel basePanel) {
         this.nameList = nameList;
+        this.basePanel = basePanel;
 
         this.setLayout(new GridBagLayout());
         
@@ -92,7 +93,8 @@ public class NameScreen extends JPanel{
         this.saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 nameList.getLikedNames();
-                // update the JSON TODO!!
+
+                nameList.updateJSONList();
                 // pop up with continue or show list
                 String [] options = {"Continue", "View Liked Names"};
                 int saveChoice = JOptionPane.showOptionDialog(contentPanel,
@@ -102,10 +104,14 @@ public class NameScreen extends JPanel{
                             JOptionPane.QUESTION_MESSAGE,
                             null, options, options[0]);
                 
-                if (saveChoice == 0) {
-                    // continue swiping
-                } else {
+                if (saveChoice == 1) {
                     // switch to the list view
+                    System.out.println("Switching to the list");
+                    CardLayout cl = (CardLayout) basePanel.getLayout();
+                    ListScreen listScreen = new ListScreen(nameList);
+                    basePanel.add(listScreen, "listScreen");
+                    cl.show(basePanel, "listScreen");
+
                 }
             }
         });
@@ -140,6 +146,9 @@ public class NameScreen extends JPanel{
     }
 
     private void setUpContentPanel(){
+        // TODO: change so that it will immediately display a name instead.
+        // if starting from the beginning, move from -1, if continuing, get current.
+
         JLabel headerText = new JLabel("What do you think of ");
         this.headerPanel.add(headerText);
 

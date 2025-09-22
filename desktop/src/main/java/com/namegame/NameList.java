@@ -2,7 +2,6 @@ package com.namegame;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.ArrayList;
@@ -93,8 +92,9 @@ public class NameList {
                     double firstRatio = attributes.get("firstNameRatio").asDouble();
                     double genderRatio = attributes.get("genderRatio").asDouble();
                     boolean liked = attributes.get("liked").asBoolean();
+                    boolean filtered = attributes.get("filtered").asBoolean();
 
-                    names.add(new Name(id, name, count, firstRatio, genderRatio, liked));
+                    names.add(new Name(id, name, count, firstRatio, genderRatio, liked, filtered));
 
                 }
             } else if (infoEntry.getKey().equals("username")) {
@@ -138,10 +138,35 @@ public class NameList {
      * @return name
      */
     public Name getNextName(){
-        // TODO: add "if not filtered out" looppi
+        int next = current + 1;
 
-        setCurrent(current+1);
-        return names.get(current);
+        while (next < names.size() && names.get(next).isFiltered()) {
+            next++;
+        }
+
+        if (next < names.size()) {
+            setCurrent(next);
+            return names.get(current);
+        } else {
+            return null;
+        }
+    }
+
+    public void updateJSONList() {
+        ObjectMapper mapper = new ObjectMapper();
+
+        Map<String, Object> jsonMap = new java.util.HashMap<>();
+        jsonMap.put("username", username);
+        jsonMap.put("current", current);
+        jsonMap.put("names", names);
+
+        File filu = new File("namelist.json");
+        try {
+            mapper.writeValue(filu, jsonMap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
     }
 
     /**

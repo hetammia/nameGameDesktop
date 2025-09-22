@@ -25,15 +25,17 @@ import java.awt.Font;
 public class HomeScreen extends JPanel {
 
     JPanel panel = new JPanel();
+    JPanel basePanel = new JPanel();
     JLabel title = new JLabel();
-    JButton startButton = new JButton("Start from beginning");
+    JButton startButton = new JButton("New Game");
     JButton continueButton = new JButton("Continue"); 
 
     NameList nameList;
 
-    public HomeScreen () {
+    public HomeScreen (JPanel basePanel) {
 
         this.panel = this;
+        this.basePanel = basePanel;
         
         setUpTitle();
 
@@ -50,7 +52,7 @@ public class HomeScreen extends JPanel {
                             "Gender Preference", 
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.QUESTION_MESSAGE,
-                            null, optionsGender, optionsGender[0]);
+                            null, optionsGender, optionsGender[2]);
 
                 String [] optionsBinary = {"Yes", "No"};
                 int rarityChoice = JOptionPane.showOptionDialog(panel, 
@@ -58,7 +60,7 @@ public class HomeScreen extends JPanel {
                             "Rarity Preference",
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.QUESTION_MESSAGE,
-                            null, optionsBinary, optionsBinary[0]);
+                            null, optionsBinary, optionsBinary[1]);
                 
                 
 
@@ -86,10 +88,9 @@ public class HomeScreen extends JPanel {
 
                     if (continueChoice == 0) {
                         System.out.println("Continuing");
-                        JPanel basePanel = (JPanel) panel.getParent();
+                        //this.basePanel = (JPanel) panel.getParent();
                         CardLayout cl = (CardLayout) basePanel.getLayout();
-                        System.out.println("Length " + nameList.names.size());
-                        NameScreen nameScreen = new NameScreen(nameList);
+                        NameScreen nameScreen = new NameScreen(nameList, basePanel);
                         basePanel.add(nameScreen, "nameScreen");
                         cl.show(basePanel, "nameScreen");
                         
