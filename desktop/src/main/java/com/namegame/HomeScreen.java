@@ -47,27 +47,33 @@ public class HomeScreen extends JPanel {
                 String name = JOptionPane.showInputDialog(panel,
                         "Welcome! What is your name?", null);
 
-                String [] optionsGender = {"Boy", "Girl", "Both"};
-                int genderChoice = JOptionPane.showOptionDialog(panel, 
-                            "For which gender are you looking for a name?", 
-                            "Gender Preference", 
-                            JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null, optionsGender, optionsGender[2]);
+                if (name != null) {
 
-                String [] optionsBinary = {"Yes", "No"};
-                int rarityChoice = JOptionPane.showOptionDialog(panel, 
-                            "Do you want to filter out very uncommon names (10 or less people)?", 
-                            "Rarity Preference",
-                            JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null, optionsBinary, optionsBinary[1]);
-                
-                nameList = new NameList(name, genderChoice, rarityChoice);
-                
+                    String [] optionsGender = {"Boy", "Girl", "Both"};
+                    int genderChoice = JOptionPane.showOptionDialog(panel, 
+                                "For which gender are you looking for a name?", 
+                                "Gender Preference", 
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null, optionsGender, optionsGender[2]);
+
+                    String [] optionsBinary = {"Yes", "No"};
+                    int rarityChoice = JOptionPane.showOptionDialog(panel, 
+                                "Do you want to filter out very uncommon names (10 or less people)?", 
+                                "Rarity Preference",
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null, optionsBinary, optionsBinary[1]);
+                    
+                    System.out.println("initialising");
+                    nameList = new NameList(name, genderChoice, rarityChoice);
+                    CardLayout cl = (CardLayout) basePanel.getLayout();
+                    NameScreen nameScreen = new NameScreen(nameList, basePanel);
+                    basePanel.add(nameScreen, "nameScreen");
+                    cl.show(basePanel, "nameScreen");
+                }
             }
         });
-        
 
         // CONTINUE BUTTON
 
@@ -87,13 +93,11 @@ public class HomeScreen extends JPanel {
 
                     if (continueChoice == 0) {
                         System.out.println("Continuing");
-                        //this.basePanel = (JPanel) panel.getParent();
                         CardLayout cl = (CardLayout) basePanel.getLayout();
                         NameScreen nameScreen = new NameScreen(nameList, basePanel);
                         basePanel.add(nameScreen, "nameScreen");
                         cl.show(basePanel, "nameScreen");
                         
-
                     }
                 } catch (IOException notFoundE) {
                     System.out.println("No name list initialised");

@@ -21,6 +21,8 @@ public class NameScreen extends JPanel{
     JPanel panel = new JPanel();
     JPanel basePanel = new JPanel();
 
+    Constants contants = new Constants();
+
     // for containing the header, name, & info
     JPanel contentPanel = new JPanel();
 
@@ -147,8 +149,6 @@ public class NameScreen extends JPanel{
     }
 
     private void setUpContentPanel(){
-        // TODO: change so that it will immediately display a name instead.
-        // if starting from the beginning, move from -1, if continuing, get current.
 
         JLabel headerText = new JLabel("What do you think of ");
         this.headerPanel.add(headerText);
@@ -163,12 +163,22 @@ public class NameScreen extends JPanel{
 
         this.contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.PAGE_AXIS));
 
+        if (nameList.getCurrent() < 0) {
+            switchNextName(nameList.getCurrent());
+        } else {
+            Name currentName = nameList.names.get(nameList.getCurrent());
+            this.name.setText(currentName.name);
+            this.infoData.setText(formInfoString(currentName));
+            this.setUpBackground(currentName.getGenderRatio());
+        }
+
         this.contentPanel.add(headerPanel);
         this.contentPanel.add(namePanel);
         this.contentPanel.add(infoPanel);
 
         this.contentPanel.setBorder(new EmptyBorder(50, 0, 20, 0));
         this.panel.add(contentPanel);
+
     }
 
     private String formInfoString(Name name) {
@@ -176,17 +186,17 @@ public class NameScreen extends JPanel{
         String gender;
         String firstRatio;
 
-        if (name.getGenderRatio() < 0.25) {
+        if (name.getGenderRatio() < contants.FEMALEPERCENTAGE) {
             gender = "Most people with this name are <b>women</b>. <br>";
-        } else if (name.getGenderRatio() > 0.75) {
+        } else if (name.getGenderRatio() > contants.MALEPERCENTAGE) {
             gender = "Most people with this name are <b>men</b>. <br>";
         } else {
             gender = "This name is quite <b>unisex</b>. <br>";
         }
 
-        if (name.getFirstNameRatio() < 0.33) {
+        if (name.getFirstNameRatio() < contants.MIDDLENAMEPERCENTAGE) {
             firstRatio = "It is commonly a <b>middle name</b>.";
-        } else if (name.getFirstNameRatio() > 0.66){
+        } else if (name.getFirstNameRatio() > contants.FIRSTNAMEPERCENTAGE){
             firstRatio = "It is commonly a <b>first name</b>.";
         } else {
             firstRatio = "It is used as <b>both first and middle name</b>.";
