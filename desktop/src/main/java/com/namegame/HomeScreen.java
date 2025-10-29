@@ -59,7 +59,7 @@ public class HomeScreen extends JPanel {
 
                     String [] optionsBinary = {"Yes", "No"};
                     int rarityChoice = JOptionPane.showOptionDialog(panel, 
-                                "Do you want to filter out very uncommon names (10 or less people)?", 
+                                "Do you want to filter out very uncommon names (50 or less people)?", 
                                 "Rarity Preference",
                                 JOptionPane.DEFAULT_OPTION,
                                 JOptionPane.QUESTION_MESSAGE,
