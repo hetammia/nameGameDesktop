@@ -63,6 +63,7 @@ public class NameScreen extends JPanel{
     private void setUpButtonPanel() {
         // TODO: add functionality to back button
         this.buttonPanel.add(this.backButton);
+        setBackAction();
         this.buttonPanel.add(this.dislikeButton);
         setDislikeAction();
         this.buttonPanel.add(this.likeButton);
@@ -73,6 +74,31 @@ public class NameScreen extends JPanel{
         this.buttonPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
         this.panel.add(buttonPanel);
+    }
+
+    private void setBackAction(){
+        
+        this.backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("go back");
+                int previous = nameList.getCurrent() - 1;
+                
+                // find the latest non-filtered name
+                while (previous >= 0 && nameList.names.get(previous).isFiltered()) {
+                    previous--;
+                }
+
+                
+                if (previous <= 0){
+                    System.out.println("no way back");
+                    // TODO: make the button grey & unclickable
+                    return;
+                }
+
+                nameList.setCurrent(previous-1);
+                switchNextName(nameList.getCurrent());
+            }
+        });
     }
 
     private void setDislikeAction () {

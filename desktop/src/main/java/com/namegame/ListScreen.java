@@ -39,9 +39,9 @@ public class ListScreen extends JPanel {
             JLabel nameLabel = formatNameLabel(name.name);
             this.panel.add(nameLabel);
         }
-
-        //this.add(this.panel);
     }
+
+    
     public JLabel formatNameLabel (String name) {
         JLabel nameLabel = new JLabel(name, javax.swing.SwingConstants.CENTER);
         nameLabel.setFont(new Font("Times New Roman", Font.PLAIN, 14));
