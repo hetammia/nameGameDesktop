@@ -2,9 +2,12 @@ package com.namegame;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,11 +27,19 @@ public class ListScreen extends JPanel {
 
         addLikedNames();
 
+        JButton exportButton = new JButton("Export list");
+        exportButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                nameList.exportLikedList();
+            }
+        });
+
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.setLayout(new BorderLayout());
         this.add(header, BorderLayout.NORTH);
         this.add(scrollPane, BorderLayout.CENTER);
+        this.add(exportButton, BorderLayout.SOUTH);
         
     }
 
@@ -41,7 +52,7 @@ public class ListScreen extends JPanel {
         }
     }
 
-    
+
     public JLabel formatNameLabel (String name) {
         JLabel nameLabel = new JLabel(name, javax.swing.SwingConstants.CENTER);
         nameLabel.setFont(new Font("Times New Roman", Font.PLAIN, 14));

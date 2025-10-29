@@ -1,6 +1,8 @@
 package com.namegame;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
@@ -16,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 public class NameList {
+    private Constants CONSTANTS = new Constants();
     ArrayList<Name> names = new ArrayList<>();
     private String username;
     private char genderPreference;
@@ -151,6 +154,25 @@ public class NameList {
             return null;
         }
     }
+    /**
+     * Exports an alphabetisised list of liked names into a csv file
+     */
+    public void exportLikedList() {
+        System.out.println("Exporting names");
+        ArrayList<Name> liked = getLikedNames();
+        liked.sort(java.util.Comparator.comparing(n -> n.name, String.CASE_INSENSITIVE_ORDER));
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("likednames.csv"))){
+
+            for (Name n : liked) {
+                bw.write(n.name);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
 
     public void updateJSONList() {
         ObjectMapper mapper = new ObjectMapper();
@@ -197,11 +219,11 @@ public class NameList {
                 newName = new Name(id, name, males, females, gender, first, false, false);
             }
             // gender preference
-            else if ((this.genderPreference == 'm' && gender < 0.25) || (this.genderPreference == 'f' && gender > 0.75)) {
+            else if ((this.genderPreference == 'm' && gender < CONSTANTS.FEMALEPERCENTAGE) || (this.genderPreference == 'f' && gender > CONSTANTS.MALEPERCENTAGE)) {
                 System.out.println("Not matching gender");
                 newName = new Name(id, name, males, females, gender, first, true, false);
                 // add to the array
-            } else if (this.ignoreRare && (males + females < 11)) {
+            } else if (this.ignoreRare && (males + females < CONSTANTS.RARITYTHRESHOLD)) {
                 System.out.println("Not matching rarity");
                 newName = new Name(id, name, males, females, gender, first, true, false);
             } else {
